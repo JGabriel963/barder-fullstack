@@ -1,26 +1,19 @@
-function dateCurrent() {
+const dateCurrent = () => {
     let dateCurrent = new Date();
-    let day = dateCurrent.getDay();
-    let month = dateCurrent.getMonth();
+    console.log(dateCurrent);
+    let day = dateCurrent.getDate();
+    let month = dateCurrent.getMonth() + 1;
     let year = dateCurrent.getFullYear();
-    let format = (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + year;
-    return format; // Retornando o resultado formatado
+
+    return (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + year;
 }
 
-console.log(dateCurrent);
 
 const openModal = () => document.getElementById('modal').classList.add('active')
 
 const closeModal = () => {
     document.getElementById('modal').classList.remove('active')
     clearFields()
-}
-
-const tempClient = {
-    nome: "Lucas",
-    email: 'joaogabriel9633@gmail.com',
-    celular: '86988923098',
-    cidade: 'Teseina/PI'
 }
 
 const getLocalStorage = () => JSON.parse(localStorage.getItem('db_investimento')) || []
@@ -62,7 +55,7 @@ const salveClient = () => {
     if (isValidFields()) {
         const client = {
             code: document.getElementById('code').value,
-            data: `${data.getDay}/${data.getMonth}/${data.getFullYear}`,
+            data: dateCurrent(),
             amount: document.getElementById('amount').value,
             unitaryValue: document.getElementById('unitary-value').value,
             buySell: document.getElementById('buy-sell').value,
@@ -72,11 +65,42 @@ const salveClient = () => {
             finalValue: (document.getElementById('amount').value * document.getElementById('unitary-value').value) + 1.92
         }
         createClient(client)
+        updateTable()
         closeModal()
         console.log("Cadastrando cliente!");
     }
 }
 
+const createRow = (client) => {
+    const newRow = document.createElement('tr')
+    newRow.innerHTML = `
+    <td>${client.code}</td>
+    <td>${client.data}</td>
+    <td>${client.amount}</td>
+    <td>${client.unitaryValue}</td>
+    <td>${client.buySell}</td>
+    <td>${client.brokerageFee}</td>
+    <td>${client.opValue}</td>
+    <td>${client.imposto}</td>
+    <td>${client.finalValue}</td>
+    `
+
+    document.querySelector('#tableInvest > tbody').appendChild(newRow)
+
+}
+
+const clearTable = () => {
+    const rows = document.querySelectorAll('#tableInvest > tbody tr')
+    rows.forEach(row => row.parentNode.removeChild(row))
+}
+
+const updateTable = () => {
+    const dbClient = readClient()
+    clearTable()
+    dbClient.forEach(createRow)
+}
+
+updateTable()
 
 // Eventos
 document.getElementById('cadastrarCliente').addEventListener('click', openModal)

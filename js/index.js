@@ -1,14 +1,3 @@
-const dateCurrent = () => {
-    let dateCurrent = new Date();
-    console.log(dateCurrent);
-    let day = dateCurrent.getDate();
-    let month = dateCurrent.getMonth() + 1;
-    let year = dateCurrent.getFullYear();
-
-    return (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + year;
-}
-
-
 const openModal = () => document.getElementById('modal').classList.add('active')
 
 const closeModal = () => {
@@ -19,7 +8,7 @@ const closeModal = () => {
 const getLocalStorage = () => JSON.parse(localStorage.getItem('db_investimento')) || []
 const setLocalStorage = (dbClient) => localStorage.setItem('db_investimento', JSON.stringify(dbClient))
 
-// Delete
+// Delete - Ainda não esta integrada corretamente na aplicação
 const deleteClient = (index) => {
     const dbClient = readClient()
     dbClient.splice(index, 1)
@@ -34,7 +23,7 @@ const updateClient = (index, client) => {
 
 const readClient = () => getLocalStorage()
 
-const createClient = (client) => {
+const createInvestiment = (client) => {
     const dbClient = getLocalStorage()
     dbClient.push(client)
     setLocalStorage(dbClient)
@@ -51,40 +40,39 @@ const clearFields = () => {
 }
 
 
-const salveClient = () => {
+const salveInvestiment = () => {
     if (isValidFields()) {
-        const client = {
+        const investment = {
             code: document.getElementById('code').value,
-            data: dateCurrent(),
+            data: document.getElementById('date').value,
             amount: document.getElementById('amount').value,
             unitaryValue: document.getElementById('unitary-value').value,
             buySell: document.getElementById('buy-sell').value,
             brokerageFee: document.getElementById('brokerage-fee').value,
             opValue: document.getElementById('amount').value * document.getElementById('unitary-value').value,
-            imposto: 1.92,
+            imposto: (((document.getElementById('amount').value * document.getElementById('unitary-value').value) * 0.03) / 100).toFixed(2),
             finalValue: (document.getElementById('amount').value * document.getElementById('unitary-value').value) + 1.92
         }
-        createClient(client)
+        createInvestiment(investment)
         updateTable()
         closeModal()
-        console.log("Cadastrando cliente!");
     }
 }
 
-const createRow = (client) => {
+const createRow = (investment) => {
     const newRow = document.createElement('tr')
     newRow.innerHTML = `
-    <td>${client.code}</td>
-    <td>${client.data}</td>
-    <td>${client.amount}</td>
-    <td>${client.unitaryValue}</td>
-    <td>${client.buySell}</td>
-    <td>${client.brokerageFee}</td>
-    <td>${client.opValue}</td>
-    <td>${client.imposto}</td>
-    <td>${client.finalValue}</td>
-    `
+    <td>${investment.code}</td>
+    <td>${investment.data}</td>
+    <td>${investment.amount}</td>
+    <td>R$${investment.unitaryValue}</td>
+    <td>${investment.buySell}</td>
+    <td>R$${investment.brokerageFee}</td>
+    <td>R$${investment.opValue}</td>
+    <td>R$${investment.imposto}</td>
+    <td>R$${investment.finalValue}</td>
 
+    `
     document.querySelector('#tableInvest > tbody').appendChild(newRow)
 
 }
@@ -97,7 +85,7 @@ const clearTable = () => {
 const updateTable = () => {
     const dbClient = readClient()
     clearTable()
-    dbClient.forEach(createRow)
+    dbClient.reverse().forEach(createRow)
 }
 
 updateTable()
@@ -107,4 +95,4 @@ document.getElementById('cadastrarCliente').addEventListener('click', openModal)
 
 document.getElementById('modalClose').addEventListener('click', closeModal)
 
-document.getElementById('salvar').addEventListener('click', salveClient)
+document.getElementById('salvar').addEventListener('click', salveInvestiment)

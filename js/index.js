@@ -12,6 +12,7 @@ const setLocalStorage = (dbClient) => localStorage.setItem('db_investimento', JS
 const deleteClient = (index) => {
     const dbClient = readClient()
     dbClient.splice(index, 1)
+    setLocalStorage(dbClient)
 }
 
 // Atualizar/Modificar o banco de Dados
@@ -59,7 +60,7 @@ const salveInvestiment = () => {
     }
 }
 
-const createRow = (investment) => {
+const createRow = (investment, index) => {
     const newRow = document.createElement('tr')
     newRow.innerHTML = `
     <td>${investment.code}</td>
@@ -71,7 +72,10 @@ const createRow = (investment) => {
     <td>R$${investment.opValue}</td>
     <td>R$${investment.imposto}</td>
     <td>R$${investment.finalValue}</td>
-
+    <td>
+        <button type="button" class="button green" id="edit-${index}">Editar</button>
+        <button type="button" class="button red" id="delete-${index}">Excluir</button>
+    </td>
     `
     document.querySelector('#tableInvest > tbody').appendChild(newRow)
 
@@ -85,7 +89,41 @@ const clearTable = () => {
 const updateTable = () => {
     const dbClient = readClient()
     clearTable()
-    dbClient.reverse().forEach(createRow)
+    dbClient.forEach(createRow)
+}
+
+const fillFields = (client) => {
+    document.getElementById('code').value = client.code;
+    document.getElementById('date').value = client.data;
+    document.getElementById('amount').value = client.amount;
+    document.getElementById('unitary-value').value = client.unitaryValue;
+    document.getElementById('brokerage-fee').value = client.brokerageFee;
+}
+
+const editClient = (index) => {
+    const client = readClient()[index]
+    fillFields(client)
+    openModal()
+}
+
+
+const editDelete = (ev) => {
+    if (ev.target.type === "button") {
+
+        const [action, index] = ev.target.id.split("-")
+
+        if (action === "edit") {
+            editClient(index)
+        } else {
+            const investment = readClient()[index]
+            const confirmation = confirm(`Tem certeza que deseja excluir o inestimento de código ${investment.code}`)
+            if (confirmation) {
+                deleteClient(index)
+                updateTable()
+            }
+        }
+    }
+    
 }
 
 updateTable()
@@ -96,3 +134,5 @@ document.getElementById('cadastrarCliente').addEventListener('click', openModal)
 document.getElementById('modalClose').addEventListener('click', closeModal)
 
 document.getElementById('salvar').addEventListener('click', salveInvestiment)
+
+document.querySelector('#tableInvest > tbody').addEventListener('click', editDelete)

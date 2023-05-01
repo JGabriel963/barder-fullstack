@@ -1,70 +1,3 @@
-// Validation 
-const inputFields = {
-    code: document.getElementById('code'),
-    data: document.getElementById('date'),
-    amount: document.getElementById('amount'),
-    unitaryValue: document.getElementById('unitary-value'),
-    brokerageFee: document.getElementById('brokerage-fee')
-}
-
-function validateEmail(email) {
-    if (!email.match(/[A-Z]{4}\d{2,3}/)) {
-        const err = new Error("Código inválido")
-        err.input = 'code'
-        throw err
-    }
-}
-
-function validateDate(date) {
-    if (!date.match(/\d{2}\/\d{2}\/\d{4}/)) {
-        const err = new Error("Data inválida")
-        err.input = 'data'
-        throw err
-    }
-}
-
-function validateAmout(amount) {
-    if (!amount.match(/^\d+$/)) {
-        const err = new Error("Valor inválido.")
-        err.input = 'amount'
-        throw err
-    }
-}
-
-function validateUnitary(value) {
-    if (!value.match(/^\d+$/)) {
-        const err = new Error("Valor inválido.")
-        err.input = 'unitaryValue'
-        throw err
-    }
-}
-
-function validateBrokerageFee(value) {
-    if (!value.match(/^\d+$/)) {
-        const err = new Error("Valor inválido.")
-        err.input = 'brokerageFee'
-        throw err
-    }
-}
-
-function validateFields() {
-    validateEmail(inputFields.code.value)
-    validateDate(inputFields.data.value)
-    validateAmout(inputFields.amount.value)
-    validateUnitary(inputFields.unitaryValue.value)
-    validateBrokerageFee(inputFields.brokerageFee.value)
-}
-
-
-// Fim da validation
-
-const openModal = () => document.getElementById('modal').classList.add('active')
-
-const closeModal = () => {
-    document.getElementById('modal').classList.remove('active')
-    clearFields()
-}
-
 const getLocalStorage = () => JSON.parse(localStorage.getItem('db_investimento')) || []
 const setLocalStorage = (dbClient) => localStorage.setItem('db_investimento', JSON.stringify(dbClient))
 
@@ -84,45 +17,9 @@ const updateClient = (index, client) => {
 
 const readClient = () => getLocalStorage()
 
-const createInvestiment = (client) => {
-    const dbClient = getLocalStorage()
-    dbClient.push(client)
-    setLocalStorage(dbClient)
-}
 
 const isValidFields = () => {
     return document.getElementById('form').reportValidity()
-}
-
-// Interação com o layout
-const clearFields = () => {
-    const fields = document.querySelectorAll('.modal-field')
-    fields.forEach(fields => fields.value = "")
-}
-
-
-const salveInvestiment = () => {
-    try {
-        validateFields()
-        if (isValidFields()) {
-            const investment = {
-                code: document.getElementById('code').value,
-                data: document.getElementById('date').value,
-                amount: document.getElementById('amount').value,
-                unitaryValue: document.getElementById('unitary-value').value,
-                buySell: document.getElementById('buy-sell').value,
-                brokerageFee: document.getElementById('brokerage-fee').value,
-                opValue: document.getElementById('amount').value * document.getElementById('unitary-value').value,
-                imposto: (((document.getElementById('amount').value * document.getElementById('unitary-value').value) * 0.03) / 100).toFixed(2),
-                finalValue: (document.getElementById('amount').value * document.getElementById('unitary-value').value) + 1.92
-            }
-            createInvestiment(investment)
-            updateTable()
-            closeModal()
-        }
-    } catch (err) {
-        inputFields[err.input].classList.add('error')
-    }
 }
 
 const createRow = (investment, index) => {
@@ -194,10 +91,5 @@ const editDelete = (ev) => {
 updateTable()
 
 // Eventos
-document.getElementById('cadastrarCliente').addEventListener('click', openModal)
-
-document.getElementById('modalClose').addEventListener('click', closeModal)
-
-document.getElementById('salvar').addEventListener('click', salveInvestiment)
 
 document.querySelector('#tableInvest > tbody').addEventListener('click', editDelete)

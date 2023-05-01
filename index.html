@@ -16,7 +16,7 @@
         <h1 class="header-title">Investimentos</h1>
     </header>
     <main>
-        <button type="button" class="button blue mobile" id="cadastrarCliente">Adicionar novo investimento</button>
+        <!-- <button type="button" class="button blue mobile" id="cadastrarCliente">Adicionar novo investimento</button> -->
         <table id="tableInvest" class="records">
             <thead>
                 <tr>
@@ -36,29 +36,6 @@
                 
             </tbody>
         </table>
-        <div class="modal" id="modal">
-            <div class="modal-content">
-                <header class="modal-header">
-                    <h2>Novo Investimento</h2>
-                    <span class="modal-close" id="modalClose">&#10006;</span>
-                </header>
-                <form id="form" class="modal-form">
-                    <input type="text" id="code" class="modal-field" placeholder="Código" autocomplete="off" required>
-                    <input type="text" id="date" class="modal-field" placeholder="DD/MM/AAAA" autocomplete="off" required>
-                    <input type="text" id="amount" class="modal-field" placeholder="Quantidade" autocomplete="off" required>
-                    <input type="text" id="unitary-value" class="modal-field" placeholder="Valor unitário" autocomplete="off" required>
-                    <select name="buy-sell" id="buy-sell" class="modal-field">
-                        <option value="C" selected >Compra</option>
-                        <option value="V">Venda</option>
-                    </select>
-                    <input type="text" id="brokerage-fee" class="modal-field" placeholder="Taxa corretária" autocomplete="off" required>
-                </form>
-                <footer id="form-submit" class="modal-footer">
-                    <button type="submit" id="salvar" class="button green">Salvar</button>
-                    <button class="button blue">Cancelar</button>
-                </footer>
-            </div>
-        </div>
     </main>
     <footer>
         Trabalho Métodos Ágeis 

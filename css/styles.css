@@ -178,9 +178,11 @@ button.red{
 
 .modal-form{
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: space-between; */
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 15px;
     padding: 0 20px;
 }
 
@@ -192,6 +194,7 @@ button.red{
     box-shadow: 0 0 2px black;
     padding: 0 10px;
     font-size:1rem;
+    border: 2px solid transparent;
 }
 
 .modal-field:focus{
@@ -199,12 +202,17 @@ button.red{
     box-shadow: 0 0 3px var(--primary-color);
 }
 
+.error {
+    box-shadow: 0 0 3px rgba(231, 5, 5, 0.966);
+    border: 2px solid rgba(231, 5, 5, 0.966);
 
+}
 .modal-footer{
     background-color: inherit;
     text-align: right;
     padding: 0 20px;
 }
+
 
 @media (max-width:480px){
     .modal{

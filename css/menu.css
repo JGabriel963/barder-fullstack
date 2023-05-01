@@ -40,3 +40,14 @@ ul a:hover {
     text-decoration: underline;
     color: #f1f1f1;
 }
+
+main {
+    max-width: 750px;
+    margin: 0 auto;
+    height: auto;
+}
+
+img {
+    display: block;
+    width: 100%;
+}

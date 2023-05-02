@@ -4,41 +4,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <!-- Link to Css -->
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- Link to JavaScript -->
-    <script src="js/index.js" defer></script>
+    <title>Document</title>
+    <link rel="stylesheet" href="css/menu.css">
 </head>
 <body>
     <header>
-        <h1 class="header-title">Investimentos</h1>
+        <h1><i class="fa-light fa-coin"></i>Investe mais</h1>
+        <ul class="nav-links">
+            <li id="cadastrarCliente"><a href="#" >Fazer investimento</a></li>
+            <li><a href="index.html">Ver investimentos</a></li>
+        </ul>
     </header>
     <main>
-        <!-- <button type="button" class="button blue mobile" id="cadastrarCliente">Adicionar novo investimento</button> -->
-        <table id="tableInvest" class="records">
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Data</th>
-                    <th>Quantidade</th>
-                    <th>Valor unitário</th>
-                    <th>C/V</th>
-                    <th>Taxa corretora</th>
-                    <th>Valor Op.</th>
-                    <th>Imposto</th>
-                    <th>Valor Final</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                
-            </tbody>
-        </table>
+        <img src="ilustracao-de-trabalho-de-estagio/4617305.jpg" alt="">
+
+        <!-- MODAL -->
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h2>Novo Investimento</h2>
+                    <span class="modal-close" id="modalClose">&#10006;</span>
+                </header>
+                <form id="form" class="modal-form">
+                    <input type="text" id="code" class="modal-field" placeholder="Código" autocomplete="off" required>
+                    <input type="text" id="date" class="modal-field" placeholder="DD/MM/AAAA" autocomplete="off" required>
+                    <input type="text" id="amount" class="modal-field" placeholder="Quantidade" autocomplete="off" required>
+                    <input type="text" id="unitary-value" class="modal-field" placeholder="Valor unitário" autocomplete="off" required>
+                    <select name="buy-sell" id="buy-sell" class="modal-field">
+                        <option value="C" selected >Compra</option>
+                        <option value="V">Venda</option>
+                    </select>
+                    <input type="text" id="brokerage-fee" class="modal-field" placeholder="Taxa corretária" autocomplete="off" required>
+                </form>
+                <footer id="form-submit" class="modal-footer">
+                    <button type="submit" id="salvar" class="button green">Salvar</button>
+                    <button class="button blue">Cancelar</button>
+                </footer>
+            </div>
+        </div>
     </main>
-    <footer>
-        Trabalho Métodos Ágeis 
-    </footer>
+    <script src="js/menu.js"></script>
 </body>
 </html>

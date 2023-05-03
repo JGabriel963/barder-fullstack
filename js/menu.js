@@ -104,6 +104,14 @@ const alertError = (error) => {
     }
 }
 
+function valorFinal(valor, valorop, taxa, imposto) {
+    if (valor === "C") {
+        return valorop + taxa + imposto
+    } else {
+        return valorop - taxa - imposto
+    }
+}
+
 const salveInvestiment = () => {
     try {
         validateFields()
@@ -117,7 +125,7 @@ const salveInvestiment = () => {
                 brokerageFee: document.getElementById('brokerage-fee').value,
                 opValue: document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.'),
                 imposto: (((document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.')) * 0.03) / 100).toFixed(2),
-                finalValue: (document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.')) + 1.92
+                finalValue: valorFinal(document.getElementById('buy-sell').value, document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.'), document.getElementById('brokerage-fee').value, (((document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.')) * 0.03) / 100).toFixed(2))
             }
             createInvestiment(investment)
             // updateTable()

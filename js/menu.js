@@ -8,7 +8,7 @@ const inputFields = {
 }
 
 function validateEmail(email) {
-    if (!email.match(/[A-Z]{4}\d{2,3}/)) {
+    if (!email.match(/[A-Z]{4}\d{1,2}/)) {
         const err = new Error("Código inválido")
         err.input = 'code'
         throw err
@@ -32,7 +32,7 @@ function validateAmout(amount) {
 }
 
 function validateUnitary(value) {
-    if (!value.match(/^\d+$/)) {
+    if (!value.match(/^[0-9]+([,][0-9]+?$)/)) {
         const err = new Error("Valor inválido.")
         err.input = 'unitaryValue'
         throw err
@@ -115,9 +115,9 @@ const salveInvestiment = () => {
                 unitaryValue: document.getElementById('unitary-value').value,
                 buySell: document.getElementById('buy-sell').value,
                 brokerageFee: document.getElementById('brokerage-fee').value,
-                opValue: document.getElementById('amount').value * document.getElementById('unitary-value').value,
-                imposto: (((document.getElementById('amount').value * document.getElementById('unitary-value').value) * 0.03) / 100).toFixed(2),
-                finalValue: (document.getElementById('amount').value * document.getElementById('unitary-value').value) + 1.92
+                opValue: document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.'),
+                imposto: (((document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.')) * 0.03) / 100).toFixed(2),
+                finalValue: (document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.')) + 1.92
             }
             createInvestiment(investment)
             // updateTable()

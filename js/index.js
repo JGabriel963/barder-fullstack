@@ -1,3 +1,30 @@
+// Inicio do TEste
+const openModal = () => document.getElementById('modal').classList.add('active')
+
+const closeModal = () => {
+    document.getElementById('modal').classList.remove('active')
+}
+
+const saveEditInvestiment = () => {
+    if(isValidFields()) {
+        const investment = {
+            code: document.getElementById('code').value,
+            data: document.getElementById('date').value,
+            amount: document.getElementById('amount').value,
+            unitaryValue: document.getElementById('unitary-value').value,
+            buySell: document.getElementById('buy-sell').value,
+            brokerageFee: document.getElementById('brokerage-fee').value,
+            opValue: document.getElementById('amount').value * document.getElementById('unitary-value').value,
+            imposto: (((document.getElementById('amount').value * document.getElementById('unitary-value').value) * 0.03) / 100).toFixed(2),
+            finalValue: (document.getElementById('amount').value * document.getElementById('unitary-value').value) + 1.92
+        }
+        const index = document.getElementById('code').dataset.index
+        updateClient(index, investment)
+        updateTable()
+        closeModal()
+    }
+}
+// Fim do teste
 const getLocalStorage = () => JSON.parse(localStorage.getItem('db_investimento')) || []
 const setLocalStorage = (dbClient) => localStorage.setItem('db_investimento', JSON.stringify(dbClient))
 
@@ -60,10 +87,12 @@ const fillFields = (client) => {
     document.getElementById('amount').value = client.amount;
     document.getElementById('unitary-value').value = client.unitaryValue;
     document.getElementById('brokerage-fee').value = client.brokerageFee;
+    document.getElementById('code').dataset.index = client.index
 }
 
 const editClient = (index) => {
     const client = readClient()[index]
+    client.index = index
     fillFields(client)
     openModal()
 }
@@ -91,5 +120,8 @@ const editDelete = (ev) => {
 updateTable()
 
 // Eventos
+document.getElementById('salvar').addEventListener('click', saveEditInvestiment)
+
+document.getElementById('modalClose').addEventListener('click', closeModal)
 
 document.querySelector('#tableInvest > tbody').addEventListener('click', editDelete)

@@ -1,4 +1,4 @@
-// validation
+// // Validation 
 const inputFields = {
     code: document.getElementById('code'),
     data: document.getElementById('date'),
@@ -32,7 +32,7 @@ function validateAmout(amount) {
 }
 
 function validateUnitary(value) {
-    if (!value.match(/^[0-9]+([,][0-9]+?$)/)) {
+    if (!value.match(/^\d+([,]\d+)?$/)) {
         const err = new Error("Valor inválido.")
         err.input = 'unitaryValue'
         throw err
@@ -40,7 +40,7 @@ function validateUnitary(value) {
 }
 
 function validateBrokerageFee(value) {
-    if (!value.match(/^\d+$/)) {
+    if (!value.match(/^\d+([,]\d+)?$/)) {
         const err = new Error("Valor inválido.")
         err.input = 'brokerageFee'
         throw err
@@ -54,21 +54,24 @@ function validateFields() {
     validateUnitary(inputFields.unitaryValue.value)
     validateBrokerageFee(inputFields.brokerageFee.value)
 }
-// End
 
-// Inicio do TEste
-const openModal = () => document.getElementById('modal').classList.add('active')
+// // funções
 
-const closeModal = () => {
-    document.getElementById('modal').classList.remove('active')
+const clearFields = () => {
+    const fields = document.querySelectorAll('.modal-field')
+    fields.forEach(fields => fields.value = "")
 }
+
+// const isValidFields = () => {
+//     return document.getElementById('form').reportValidity()
+// }
 
 const alertError = (error) => {
     switch (error) {
         case 'code':
             alert("Código inválido!")
             break
-        case 'data':
+       case 'data':
             alert('Data inválida! Padrão - DD/MM/AAAA')
             break
         case 'amount':
@@ -86,137 +89,70 @@ const alertError = (error) => {
     }
 }
 
-function valorFinal(valor, valorop, taxa, imposto) {
-    if (valor === "C") {
-        return valorop + taxa + imposto
-    } else {
-        return valorop - taxa - imposto
-    }
+function openModal() {
+    document.getElementById('modal').classList.add('active')
 }
 
-const saveEditInvestiment = () => {
+function closeModal() {
+    document.getElementById('modal').classList.remove('active')
+    clearFields()
+}
+
+// Não mudar nada de cima
+
+function calcularValorFinal(option, valorOp, taxa, imposto) {
+    if (option  === "V") {
+        return +valorOp - +taxa - +imposto
+    } else if (option === "C") {
+        return +valorOp + +taxa + +imposto
+    }
+    return null
+}
+
+async function saveInvestimentos(ev) {
+    ev.preventDefault()
     try {
         validateFields()
-        if (isValidFields()) {
-            const investment = {
-                code: document.getElementById('code').value,
-                data: document.getElementById('date').value,
-                amount: document.getElementById('amount').value,
-                unitaryValue: document.getElementById('unitary-value').value,
-                buySell: document.getElementById('buy-sell').value,
-                brokerageFee: document.getElementById('brokerage-fee').value,
-                opValue: document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.'),
-                imposto: (((document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.')) * 0.03) / 100).toFixed(2),
-                finalValue: valorFinal(document.getElementById('buy-sell').value, document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.'), document.getElementById('brokerage-fee').value, (((document.getElementById('amount').value * (document.getElementById('unitary-value').value).replace(',', '.')) * 0.03) / 100).toFixed(2))
+        const codigo = document.querySelector('#code').value
+        const data = document.querySelector('#date').value
+        const quantidade = document.querySelector('#amount').value
+        const valorUnitario = document.querySelector('#unitary-value').value
+        const compraOuVenda = document.querySelector('#buy-sell').value
+        const taxaCorretaria = document.querySelector('#brokerage-fee').value
+        const valorOp = quantidade * (valorUnitario).replace(',', '.')
+        const imposto = (valorOp * 0.0003).toFixed(2)
+        const valorFinal = (calcularValorFinal(compraOuVenda, valorOp, (taxaCorretaria).replace(',', '.'), imposto)).toFixed(2)
+    
+        const response = await fetch(' http://localhost:3000/investimentos', {
+            method: 'POST',
+            body: JSON.stringify({codigo, data, quantidade, valorUnitario, compraOuVenda, taxaCorretaria, valorOp, imposto, valorFinal}),
+            headers: {
+                'Content-Type': 'application/json'
             }
-            const index = document.getElementById('code').dataset.index
-            updateClient(index, investment)
-            updateTable()
-            closeModal()
-        }
+        })
+    
+        const investimento = await response.json()
+        console.log(investimento);
+        closeModal()
+
     } catch (err) {
         inputFields[err.input].classList.add('error')
         alertError(err.input)
     }
 }
-// Fim do teste
-const getLocalStorage = () => JSON.parse(localStorage.getItem('db_investimento')) || []
-const setLocalStorage = (dbClient) => localStorage.setItem('db_investimento', JSON.stringify(dbClient))
 
-// Delete - Ainda não esta integrada corretamente na aplicação
-const deleteClient = (index) => {
-    const dbClient = readClient()
-    dbClient.splice(index, 1)
-    setLocalStorage(dbClient)
-}
-
-// Atualizar/Modificar o banco de Dados
-const updateClient = (index, client) => {
-    const dbClient = readClient()
-    dbClient[index] = client
-    setLocalStorage(dbClient)
-}
-
-const readClient = () => getLocalStorage()
-
-
-const isValidFields = () => {
-    return document.getElementById('form').reportValidity()
-}
-
-const createRow = (investment, index) => {
-    const newRow = document.createElement('tr')
-    newRow.innerHTML = `
-    <td>${investment.code}</td>
-    <td>${investment.data}</td>
-    <td>${investment.amount}</td>
-    <td>R$${investment.unitaryValue}</td>
-    <td>${investment.buySell}</td>
-    <td>R$${investment.brokerageFee}</td>
-    <td>R$${investment.opValue}</td>
-    <td>R$${investment.imposto}</td>
-    <td>R$${investment.finalValue}</td>
-    <td>
-        <button type="button" class="button green" id="edit-${index}">Editar</button>
-        <button type="button" class="button red" id="delete-${index}">Excluir</button>
-    </td>
-    `
-    document.querySelector('#tableInvest > tbody').appendChild(newRow)
-
-}
-
-const clearTable = () => {
-    const rows = document.querySelectorAll('#tableInvest > tbody tr')
-    rows.forEach(row => row.parentNode.removeChild(row))
-}
-
-const updateTable = () => {
-    const dbClient = readClient()
-    clearTable()
-    dbClient.forEach(createRow)
-}
-
-const fillFields = (client) => {
-    document.getElementById('code').value = client.code;
-    document.getElementById('date').value = client.data;
-    document.getElementById('amount').value = client.amount;
-    document.getElementById('unitary-value').value = client.unitaryValue;
-    document.getElementById('brokerage-fee').value = client.brokerageFee;
-    document.getElementById('code').dataset.index = client.index
-}
-
-const editClient = (index) => {
-    const client = readClient()[index]
-    client.index = index
-    fillFields(client)
-    openModal()
+async function fetchInvestimento() {
+    return await fetch('http://localhost:3000/investimentos').then(res => res.json())
 }
 
 
-const editDelete = (ev) => {
-    if (ev.target.type === "button") {
+document.querySelector('form').addEventListener('submit', saveInvestimentos)
 
-        const [action, index] = ev.target.id.split("-")
+document.getElementById('cadastrarCliente').addEventListener('click', openModal)
 
-        if (action === "edit") {
-            editClient(index)
-        } else {
-            const investment = readClient()[index]
-            const confirmation = confirm(`Tem certeza que deseja excluir o inestimento de código ${investment.code}`)
-            if (confirmation) {
-                deleteClient(index)
-                updateTable()
-            }
-        }
-    }
-    
-}
+document.querySelector('.modal-close').addEventListener('click', closeModal)
 
-updateTable()
 
-// Eventos
-document.getElementById('salvar').addEventListener('click', saveEditInvestiment)
 
-document.getElementById('modalClose').addEventListener('click', closeModal)
 
-document.querySelector('#tableInvest > tbody').addEventListener('click', editDelete)
+

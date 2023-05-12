@@ -1,3 +1,28 @@
 {
-  "investimentos": []
+  "investimentos": [
+    {
+      "codigo": "DFGT58",
+      "data": "15/03/2025",
+      "quantidade": "4",
+      "valorUnitario": "100",
+      "compraOuVenda": "C",
+      "taxaCorretaria": "5",
+      "valorOp": 400,
+      "imposto": "0.12",
+      "valorFinal": "405.12",
+      "id": 1
+    },
+    {
+      "codigo": "GHNU78",
+      "data": "13/20/5021",
+      "quantidade": "4",
+      "valorUnitario": "100",
+      "compraOuVenda": "C",
+      "taxaCorretaria": "5",
+      "valorOp": 400,
+      "imposto": "0.12",
+      "valorFinal": "405.12",
+      "id": 2
+    }
+  ]
 }

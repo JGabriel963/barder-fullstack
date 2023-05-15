@@ -13,16 +13,40 @@
       "id": 1
     },
     {
-      "codigo": "GHNU78",
-      "data": "13/20/5021",
-      "quantidade": "4",
-      "valorUnitario": "100",
+      "codigo": "WEGE3",
+      "data": "01/03/2023",
+      "quantidade": "100",
+      "valorUnitario": "32",
       "compraOuVenda": "C",
-      "taxaCorretaria": "5",
-      "valorOp": 400,
-      "imposto": "0.12",
-      "valorFinal": "405.12",
-      "id": 2
+      "taxaCorretaria": "2,50",
+      "valorOp": 3200,
+      "imposto": "0.96",
+      "valorFinal": "3203.46",
+      "id": 3
+    },
+    {
+      "codigo": "ITSU64",
+      "data": "03/03/2018",
+      "quantidade": "100",
+      "valorUnitario": "8",
+      "compraOuVenda": "C",
+      "taxaCorretaria": "2,50",
+      "valorOp": 800,
+      "imposto": "0.24",
+      "valorFinal": "802.74",
+      "id": 4
+    },
+    {
+      "codigo": "WEGE3",
+      "data": "06/03/2023",
+      "quantidade": "100",
+      "valorUnitario": "35,00",
+      "compraOuVenda": "V",
+      "taxaCorretaria": "2,50",
+      "valorOp": 3500,
+      "imposto": "1.05",
+      "valorFinal": "3496.45",
+      "id": 5
     }
   ]
 }

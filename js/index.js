@@ -52,12 +52,12 @@ async function saveInvestimentos(ev) {
     try {
         validateFields()
         const codigo = document.querySelector('#code').value
-        const data = document.querySelector('#date').value
+        const data = moment(document.querySelector('#date').value).format('DD/MM/YYYY')
         const quantidade = document.querySelector('#amount').value
         const valorUnitario = document.querySelector('#unitary-value').value
         const compraOuVenda = document.querySelector('#buy-sell').value
         const taxaCorretaria = document.querySelector('#brokerage-fee').value
-        const valorOp = quantidade * (valorUnitario).replace(',', '.')
+        const valorOp = (quantidade * (valorUnitario).replace(',', '.')).toFixed(2)
         const imposto = (valorOp * 0.0003).toFixed(2)
         const valorFinal = (calcularValorFinal(compraOuVenda, valorOp, (taxaCorretaria).replace(',', '.'), imposto)).toFixed(2)
     

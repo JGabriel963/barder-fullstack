@@ -47,6 +47,30 @@
       "imposto": "1.05",
       "valorFinal": "3496.45",
       "id": 5
+    },
+    {
+      "codigo": "WEGE3",
+      "data": "20/03/2023",
+      "quantidade": "6",
+      "valorUnitario": "209",
+      "compraOuVenda": "C",
+      "taxaCorretaria": "4,5",
+      "valorOp": "1254.00",
+      "imposto": "0.38",
+      "valorFinal": "1258.88",
+      "id": 6
+    },
+    {
+      "codigo": "FGBN4",
+      "data": "05/06/2023",
+      "quantidade": "95",
+      "valorUnitario": "32,56",
+      "compraOuVenda": "C",
+      "taxaCorretaria": "2,59",
+      "valorOp": "3093.20",
+      "imposto": "0.93",
+      "valorFinal": "3096.72",
+      "id": 7
     }
   ]
 }

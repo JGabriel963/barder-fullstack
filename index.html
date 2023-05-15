@@ -30,7 +30,7 @@
                 <form id="form" class="modal-form">
                     <input type="hidden" id="id" name="id">
                     <input type="text" id="code" class="modal-field" placeholder="Código" autocomplete="off" required>
-                    <input type="text" id="date" class="modal-field" placeholder="DD/MM/AAAA" autocomplete="off" required>
+                    <input type="date" id="date" class="modal-field" autocomplete="off" required>
                     <input type="text" id="amount" class="modal-field" placeholder="Quantidade" autocomplete="off" required>
                     <input type="text" id="unitary-value" class="modal-field" placeholder="Valor unitário" autocomplete="off" required>
                     <select name="buy-sell" id="buy-sell" class="modal-field">
@@ -47,5 +47,6 @@
         </div>
     </main>
     <script src="js/index.js" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </body>
 </html>

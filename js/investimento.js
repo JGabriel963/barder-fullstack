@@ -150,7 +150,7 @@ async function saveEditInvestiment(ev) {
         const valorUnitario = document.querySelector('#unitary-value').value
         const compraOuVenda = document.querySelector('#buy-sell').value
         const taxaCorretaria = document.querySelector('#brokerage-fee').value
-        const valorOp = quantidade * (valorUnitario).replace(',', '.')
+        const valorOp = (quantidade * (valorUnitario).replace(',', '.')).toFixed(2)
         const imposto = (valorOp * 0.0003).toFixed(2)
         const valorFinal = (calcularValorFinal(compraOuVenda, valorOp, (taxaCorretaria).replace(',', '.'), imposto)).toFixed(2)
     

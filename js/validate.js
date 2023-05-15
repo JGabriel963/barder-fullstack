@@ -14,14 +14,6 @@ function validateEmail(email) {
     }
 }
 
-function validateDate(date) {
-    if (!date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-        const err = new Error("Data inválida")
-        err.input = 'data'
-        throw err
-    }
-}
-
 function validateAmout(amount) {
     if (!amount.match(/^\d+$/)) {
         const err = new Error("Valor inválido.")
@@ -48,7 +40,6 @@ function validateBrokerageFee(value) {
 
 export function validateFields() {
     validateEmail(inputFields.code.value)
-    validateDate(inputFields.data.value)
     validateAmout(inputFields.amount.value)
     validateUnitary(inputFields.unitaryValue.value)
     validateBrokerageFee(inputFields.brokerageFee.value)

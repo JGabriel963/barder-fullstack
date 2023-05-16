@@ -45,6 +45,13 @@ async function setup() {
     console.log(investimentos)
 }
 
-document.addEventListener('DOMContentLoaded', setup)
+function newInvestimento() {
+    document.querySelector('.modal-code').classList.remove('hidden')
+    document.querySelector('.records').classList.remove('active')
+    document.getElementById('codigo').value = ""
+    document.querySelectorAll('tbody > tr').forEach(el => el.remove())
+}
 
+document.addEventListener('DOMContentLoaded', setup)
+document.getElementById('new-code').addEventListener('click', newInvestimento)
 document.getElementById('send-invest').addEventListener('click', procurarInvestimento)

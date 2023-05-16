@@ -26,10 +26,28 @@ header{
 }
 
 main {
-    height: calc(100vh - 70px);
+    height: calc(100vh - 119px);
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+footer{
+    width: 100;
+    text-align: center;
+    font-weight: 700;
+    padding: 12px;
+    background-color: var(--primary-color);
+}
+
+footer a {
+    text-decoration: none;
+    color: #000;
+}
+
+footer a:hover {
+    color: #fff;
+    text-decoration: underline;
 }
 
 .modal-code {

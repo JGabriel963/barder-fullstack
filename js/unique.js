@@ -29,13 +29,19 @@ function renderInvestimento(investimento) {
 function procurarInvestimento() {
     const code = document.getElementById('codigo').value
     const investiment = investimentos.filter(i => i.codigo === code)
+    const media = investiment.reduce((cont, investiment) => {
+        const valorFinal = parseFloat(investiment.valorFinal.replace(",", "."));
+        return cont + valorFinal
+    }, 0) / investiment.length;
     if (investiment === undefined) {
         alert('Investimento não encontrado!')
     } else {
+        console.log(media.toFixed(2));
         console.log(investiment)
         document.querySelector('.modal-code').classList.add('hidden')
         document.querySelector('.records').classList.add('active')
         investiment.forEach(renderInvestimento)
+        document.getElementById('media').textContent = `R$ ${media.toFixed(2)}`
     } 
 }
 

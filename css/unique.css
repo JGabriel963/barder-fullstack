@@ -36,7 +36,7 @@ a:hover {
 }
 
 main {
-    height: calc(100vh - 119px);
+    height: calc(100vh - 118px);
     display: flex;
     align-items: center;
     justify-content: center;

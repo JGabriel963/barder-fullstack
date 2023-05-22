@@ -35,6 +35,7 @@ function procurarInvestimento() {
     }, 0) / investiment.length;
     if (investiment === undefined) {
         alert('Investimento não encontrado!')
+        return
     } else {
         console.log(media.toFixed(2));
         console.log(investiment)
@@ -49,6 +50,7 @@ async function setup() {
     const results = await fetchInvestimento()
     investimentos.push(...results)
     console.log(investimentos)
+    
 }
 
 function newInvestimento() {

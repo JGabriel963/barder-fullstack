@@ -2,7 +2,7 @@
   "investimentos": [
     {
       "codigo": "ASDF12",
-      "data": "15/02/2025",
+      "data": "15/02/2022",
       "quantidade": "200",
       "valorUnitario": "8",
       "compraOuVenda": "C",
@@ -15,7 +15,7 @@
     },
     {
       "codigo": "ASDF12",
-      "data": "15/09/2025",
+      "data": "15/02/2023",
       "quantidade": "100",
       "valorUnitario": "8,5",
       "compraOuVenda": "C",
@@ -28,7 +28,7 @@
     },
     {
       "codigo": "ASDF12",
-      "data": "15/05/2012",
+      "data": "15/02/2025",
       "quantidade": "300",
       "valorUnitario": "7",
       "compraOuVenda": "C",
@@ -41,7 +41,7 @@
     },
     {
       "codigo": "ASDF12",
-      "data": "12/05/2025",
+      "data": "15/06/2025",
       "quantidade": "300",
       "valorUnitario": "8,5",
       "compraOuVenda": "V",
@@ -54,7 +54,7 @@
     },
     {
       "codigo": "ASDF12",
-      "data": "15/02/2023",
+      "data": "04/06/2025",
       "quantidade": "300",
       "valorUnitario": "5",
       "compraOuVenda": "C",
@@ -64,6 +64,32 @@
       "valorFinal": "1505.45",
       "media": "6.31",
       "id": 5
+    },
+    {
+      "codigo": "SADF12",
+      "data": "18/05/2025",
+      "quantidade": "200",
+      "valorUnitario": "8",
+      "compraOuVenda": "C",
+      "taxaCorretaria": "5",
+      "valorOp": "1600.00",
+      "imposto": "0.48",
+      "valorFinal": "1605.48",
+      "media": "8.03",
+      "id": 6
+    },
+    {
+      "codigo": "SADF12",
+      "data": "18/05/2023",
+      "quantidade": "100",
+      "valorUnitario": "8,5",
+      "compraOuVenda": "C",
+      "taxaCorretaria": "5",
+      "valorOp": "850.00",
+      "imposto": "0.26",
+      "valorFinal": "855.26",
+      "media": "8.20",
+      "id": 7
     }
   ]
 }

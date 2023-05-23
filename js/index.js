@@ -46,7 +46,7 @@ function calcularValorFinal(option, valorOp, taxa, imposto) {
     } else if (option === "C") {
         return +valorOp + +taxa + +imposto
     }
-    return null
+    return "C"
 }
 
 function calcularMedia(code, compraOuVenda, quantidade, valorFinal) {

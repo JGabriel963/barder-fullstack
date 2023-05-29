@@ -200,7 +200,20 @@ async function saveEditInvestiment(ev) {
         alertError(err.input)
     }
     
-} 
+}
+
+function compararDatas(objeto1, objeto2) {
+    const data1 = new Date(objeto1.data.split("/").reverse().join("/"));
+    const data2 = new Date(objeto2.data.split("/").reverse().join("/"));
+
+    if (data1 < data2) {
+    return -1;
+    } else if (data1 > data2) {
+    return 1;
+    } else {
+    return 0;
+    }
+}
 
 async function fetchInvestimento() {
     return await fetch('http://localhost:3000/investimentos').then(res => res.json())
@@ -209,6 +222,7 @@ async function fetchInvestimento() {
 async function setup() {
     const results = await fetchInvestimento()
     investimentos.push(...results)
+    investimentos.sort(compararDatas)
     investimentos.forEach(renderInvestimento)
 }
 

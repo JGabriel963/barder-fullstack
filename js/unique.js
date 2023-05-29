@@ -41,9 +41,23 @@ function procurarInvestimento() {
     } 
 }
 
+function compararDatas(objeto1, objeto2) {
+    const data1 = new Date(objeto1.data.split("/").reverse().join("/"));
+    const data2 = new Date(objeto2.data.split("/").reverse().join("/"));
+
+    if (data1 < data2) {
+    return -1;
+    } else if (data1 > data2) {
+    return 1;
+    } else {
+    return 0;
+    }
+}
+
 async function setup() {
     const results = await fetchInvestimento()
     investimentos.push(...results)
+    investimentos.sort(compararDatas)
     console.log(investimentos)
 
 }

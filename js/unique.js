@@ -10,8 +10,32 @@ function createRow(id) {
     return row
 }
 
+let quantidade = 0
+let media = 0
+let lucroPrejuizo = ''
+
+function calcularMedia(element) {
+    if (quantidade === 0) {
+        quantidade += +element.quantidade
+        media = (+element.valorFinal / +element.quantidade).toFixed(2)
+        console.log(quantidade)
+        console.log(media)
+        return media
+    } else if (element.compraOuVenda === "V") {
+        quantidade -= +element.quantidade
+        return media
+    } else {
+        const result = ((quantidade * media + +element.valorFinal) / (quantidade + +element.quantidade)).toFixed(2)
+        media = result
+        quantidade += +element.quantidade
+        return media
+    }
+}
+
 function renderInvestimento(investimento) {
     const row = createRow(investimento.id)
+    const media = calcularMedia(investimento)
+    
     row.innerHTML = `
     <td>${investimento.codigo}</td>
     <td>${investimento.data}</td>
@@ -22,8 +46,10 @@ function renderInvestimento(investimento) {
     <td>R$${investimento.valorOp}</td>
     <td>R$${investimento.imposto}</td>
     <td>R$${investimento.valorFinal}</td>
-    <td>R$${investimento.media}</td>
+    <td>R$${media}</td>
+    <td>${lucroPrejuizo}</td>
     `
+    lucroPrejuizo = ''
     document.querySelector('#tableInvest > tbody').appendChild(row)
 }
 

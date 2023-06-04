@@ -179,11 +179,10 @@ async function saveEditInvestiment(ev) {
         const valorOp = (quantidade * (valorUnitario).replace(',', '.')).toFixed(2)
         const imposto = (valorOp * 0.0003).toFixed(2)
         const valorFinal = (calcularValorFinal(compraOuVenda, valorOp, (taxaCorretaria).replace(',', '.'), imposto)).toFixed(2)
-        const media = (calcularMedia(codigo, compraOuVenda, quantidade, valorFinal)).toFixed(2)
     
         const response = await fetch(`http://localhost:3000/investimentos/${id}`, {
             method: 'PUT',
-            body: JSON.stringify({codigo, data, quantidade, valorUnitario, compraOuVenda, taxaCorretaria, valorOp, imposto, valorFinal, media}),
+            body: JSON.stringify({codigo, data, quantidade, valorUnitario, compraOuVenda, taxaCorretaria, valorOp, imposto, valorFinal}),
             headers: {
                 'Content-Type': 'application/json'
               }

@@ -53,23 +53,15 @@ function calcularMedia(code, compraOuVenda, quantidade, valorFinal) {
     const cod = investimentos.filter(i => i.codigo === code)
     const vendas = cod.filter(i => i.compraOuVenda === "V")
     const compras = cod.filter(i => i.compraOuVenda === "C")
-    console.log(cod)
-    console.log(cod.length)
-    console.log(vendas)
-    console.log(vendas.length)
+ 
     if (cod.length === 0) {
         return +valorFinal / +quantidade
     } else if(compraOuVenda === "V") {
         return +cod[cod.length - 1].media
     } else {
         const somaVendas = vendas.reduce((cont, el) => cont + +el.quantidade, 0)
-        console.log(somaVendas)
         const soma = compras.reduce((cont, el) => cont + +el.quantidade, 0) - somaVendas
 
-        console.log(soma)
-        console.log(+cod[cod.length - 1].media)
-        console.log(+valorFinal)
-        console.log(soma + +quantidade)
         return (soma * +cod[cod.length - 1].media + +valorFinal) / (soma + +quantidade)
     }
 
@@ -88,11 +80,10 @@ async function saveInvestimentos(ev) {
         const valorOp = (quantidade * (valorUnitario).replace(',', '.')).toFixed(2)
         const imposto = (valorOp * 0.0003).toFixed(2)
         const valorFinal = (calcularValorFinal(compraOuVenda, valorOp, (taxaCorretaria).replace(',', '.'), imposto)).toFixed(2)
-        const media = (calcularMedia(codigo, compraOuVenda, quantidade, valorFinal)).toFixed(2)
     
         const response = await fetch(' http://localhost:3000/investimentos', {
             method: 'POST',
-            body: JSON.stringify({codigo, data, quantidade, valorUnitario, compraOuVenda, taxaCorretaria, valorOp, imposto, valorFinal, media}),
+            body: JSON.stringify({codigo, data, quantidade, valorUnitario, compraOuVenda, taxaCorretaria, valorOp, imposto, valorFinal}),
             headers: {
                 'Content-Type': 'application/json'
             }

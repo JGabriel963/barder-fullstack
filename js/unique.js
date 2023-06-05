@@ -12,16 +12,18 @@ function createRow(id) {
 
 let quantidade = 0
 let media = 0
-let lucroPrejuizo = ''
+let lucroPrejuizo = '-'
+let lucro = []
 
 function calcularMedia(element) {
     if (quantidade === 0) {
         quantidade += +element.quantidade
         media = (+element.valorFinal / +element.quantidade).toFixed(2)
-        console.log(quantidade)
-        console.log(media)
         return media
     } else if (element.compraOuVenda === "V") {
+        const result = ((+(element.valorUnitario).replace(',', '.') - +media) * +element.quantidade).toFixed(2)
+        lucroPrejuizo = 'R$' + result
+        lucro.push(result)
         quantidade -= +element.quantidade
         return media
     } else {
@@ -30,6 +32,13 @@ function calcularMedia(element) {
         quantidade += +element.quantidade
         return media
     }
+}
+
+function totalLucroPrejuizo() {
+    const total = lucro.reduce((count, el) => {
+        return count + +el
+    }, 0)
+    document.getElementById('lucro-total').textContent = 'R$' + (total).toFixed(2)
 }
 
 function renderInvestimento(investimento) {
@@ -49,7 +58,7 @@ function renderInvestimento(investimento) {
     <td>R$${media}</td>
     <td>${lucroPrejuizo}</td>
     `
-    lucroPrejuizo = ''
+    lucroPrejuizo = '-'
     document.querySelector('#tableInvest > tbody').appendChild(row)
 }
 
@@ -64,6 +73,7 @@ function procurarInvestimento() {
         document.querySelector('.modal-code').classList.add('hidden')
         document.querySelector('.records').classList.add('active')
         investiment.forEach(renderInvestimento)
+        totalLucroPrejuizo()
     } 
 }
 
@@ -89,6 +99,10 @@ async function setup() {
 }
 
 function newInvestimento() {
+    quantidade = 0
+    media = 0
+    lucroPrejuizo = '-'
+    lucro = []
     document.querySelector('.modal-code').classList.remove('hidden')
     document.querySelector('.records').classList.remove('active')
     document.getElementById('codigo').value = ""

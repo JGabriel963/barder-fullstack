@@ -1,16 +1,8 @@
--- CreateTable
-CREATE TABLE "users" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "strip_customer_id" TEXT,
-    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
-);
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "address" TEXT,
+ADD COLUMN     "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "strip_customer_id" TEXT,
+ADD COLUMN     "updated_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP;
 
 -- CreateTable
 CREATE TABLE "subscriptions" (

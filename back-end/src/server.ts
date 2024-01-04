@@ -1,13 +1,12 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import cors from "cors";
-import { router } from "./routes";
+import { router } from "./router";
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-
 app.use(router);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
@@ -23,4 +22,6 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(3333, () => console.log("Server running!"));
+app.listen(3333, () => {
+  console.log("Server running");
+});

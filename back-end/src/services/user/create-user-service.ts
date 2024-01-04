@@ -26,8 +26,13 @@ export const CreateUserService = {
     const user = prisma.user.create({
       data: {
         name: name,
-        email: name,
+        email: email,
         password: hashPassword,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
       },
     });
 

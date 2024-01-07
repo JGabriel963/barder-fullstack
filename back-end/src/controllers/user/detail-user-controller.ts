@@ -5,9 +5,7 @@ export const DetailUserController = {
   handle: async (request: Request, response: Response) => {
     const user_id = request.user_id;
 
-    console.log(user_id);
-
-    const user = await UserDetailService.execute();
+    const user = await UserDetailService.execute(user_id);
 
     return response.json(user);
   },

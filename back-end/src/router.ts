@@ -8,16 +8,21 @@ import { CreateHaircutController } from "./controllers/haircut/create-haircut-co
 import { ListHaircutController } from "./controllers/haircut/list-haircut-controller";
 import { UpdateHaircutController } from "./controllers/haircut/update-haircut-controller";
 import { CheckSubscriptionController } from "./controllers/haircut/check-subscription-controller";
+import { CountHaircutController } from "./controllers/haircut/count-haircut-controller";
+import { DetailHaricutController } from "./controllers/haircut/detail-haircut-controller";
+import { NewScheduleController } from "./controllers/schedule/new-schedule-controller";
+import { ListScheduleController } from "./controllers/schedule/list-schedule-controller";
+import { FinishScheduleController } from "./controllers/schedule/finish-schedule-controller";
 
 const router = Router();
 
-// --- ROTAS USER ---
+// --- ROUTES USER ---
 router.post("/user", CreateUserController.handle);
 router.post("/session", AuthUserController.handle);
 router.get("/me", isAuthenticated, DetailUserController.handle);
 router.put("/user", isAuthenticated, UpdateUserController.handle);
 
-// --- ROTAS HAIRCUT ---
+// --- ROUTES HAIRCUT ---
 router.post("/haircut", isAuthenticated, CreateHaircutController.hanlde);
 router.get("/haircuts", isAuthenticated, ListHaircutController.handle);
 router.put("/haircut", isAuthenticated, UpdateHaircutController.handle);
@@ -26,5 +31,12 @@ router.get(
   isAuthenticated,
   CheckSubscriptionController.handle
 );
+router.get("/haircut/count", isAuthenticated, CountHaircutController.handle);
+router.get("/haircut/detail", isAuthenticated, DetailHaricutController.handle);
+
+// --- ROUTES SERVICES ---
+router.post("/schedule", isAuthenticated, NewScheduleController.handle);
+router.get("/schedule", isAuthenticated, ListScheduleController.handle);
+router.delete("/schedule", isAuthenticated, FinishScheduleController.handle);
 
 export { router };

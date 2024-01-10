@@ -2,6 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { Poppins } from "next/font/google";
 import { extendTheme } from "@chakra-ui/react";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700", "900"],
@@ -33,8 +34,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <main className={poppins.className}>
-        {" "}
-        <Component {...pageProps} />{" "}
+        <AuthProvider>
+          <Component {...pageProps} />
+        </AuthProvider>
       </main>
     </ChakraProvider>
   );

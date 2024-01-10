@@ -6,6 +6,8 @@ import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const shcema = z.object({
   email: z.string().email("Email inválido"),
@@ -15,6 +17,7 @@ const shcema = z.object({
 type FormData = z.infer<typeof shcema>;
 
 export default function Login() {
+  const { signIn } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -25,7 +28,10 @@ export default function Login() {
   });
 
   async function handleLogin(data: FormData) {
-    console.log(data);
+    await signIn({
+      email: data.email,
+      password: data.password,
+    });
   }
 
   return (

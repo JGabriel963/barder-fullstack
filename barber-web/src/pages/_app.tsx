@@ -17,10 +17,10 @@ const colors = {
     100: "#c6c6c6",
   },
   button: {
-    cta: "#fba951",
-    default: "#fff",
-    gray: "#dfdfdf",
-    danger: "#ff4040",
+    cta: "#fba931",
+    default: "#FFF",
+    gray: "#DFDFDF",
+    danger: "#FF4040",
   },
   orange: {
     900: "#fba931",

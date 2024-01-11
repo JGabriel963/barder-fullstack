@@ -38,7 +38,7 @@ export default function Login() {
       title: "Logado com sucesso",
       status: "success",
       isClosable: true,
-      variant: "sublte",
+      variant: "subtle",
       position: "top-right",
     });
   }

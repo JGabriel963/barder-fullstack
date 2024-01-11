@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Input, Text } from "@chakra-ui/react";
+import { Button, Center, Flex, Input, Text, useToast } from "@chakra-ui/react";
 import Image from "next/image";
 import logoImg from "../../../public/logo.svg";
 import Head from "next/head";
@@ -6,16 +6,21 @@ import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const schema = z.object({
-  name: z.string(),
-  email: z.string().email("Email inválido"),
+  name: z.string().min(1, "Nome é obrigatório"),
+  email: z.string().email("Email inválido").min(1, "Email é obrigatório"),
   password: z.string().min(6, "No mínimo 6 caracteres"),
 });
 
 type FormData = z.infer<typeof schema>;
 
 export default function Register() {
+  const { signUp } = useContext(AuthContext);
+  const toast = useToast();
+
   const {
     register,
     handleSubmit,
@@ -25,8 +30,20 @@ export default function Register() {
     mode: "onSubmit",
   });
 
-  async function handleRegister(data: FormData) {
-    console.log(data);
+  async function handleRegister({ email, name, password }: FormData) {
+    await signUp({
+      name,
+      email,
+      password,
+    }).then(() => {
+      toast({
+        title: "Cadastrado com sucesso",
+        status: "success",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+    });
   }
 
   return (
@@ -63,6 +80,8 @@ export default function Register() {
               size="lg"
               placeholder="Nome da barbearia"
               type="text"
+              color={errors.name && "tomato"}
+              _placeholder={{ opacity: 0.4, color: "inherit" }}
               mb={3}
               _hover={{ bg: "#1b1c29" }}
               {...register("name")}
@@ -75,6 +94,8 @@ export default function Register() {
               placeholder="example@gmail.com"
               type="email"
               mb={3}
+              color={errors.email && "tomato"}
+              _placeholder={{ opacity: 0.4, color: "inherit" }}
               _hover={{ bg: "#1b1c29" }}
               {...register("email")}
             />
@@ -86,6 +107,8 @@ export default function Register() {
               placeholder="********"
               type="password"
               mb={6}
+              color={errors.password && "tomato"}
+              _placeholder={{ opacity: 0.4, color: "inherit" }}
               _hover={{ bg: "#1b1c29" }}
               {...register("password")}
             />

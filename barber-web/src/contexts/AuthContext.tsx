@@ -7,6 +7,8 @@ interface AuthContextData {
   user: UserProps;
   isAuthenticated: boolean;
   signIn: (creadentials: SignInProps) => Promise<void>;
+  signUp: (creadentials: SignUpProps) => Promise<void>;
+  logoutUser: () => Promise<void>;
 }
 
 interface UserProps {
@@ -27,6 +29,12 @@ type AuthProviderProps = {
 };
 
 interface SignInProps {
+  email: string;
+  password: string;
+}
+
+interface SignUpProps {
+  name: string;
   email: string;
   password: string;
 }
@@ -75,8 +83,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signUp({ name, email, password }: SignUpProps) {
+    try {
+      const response = await api.post("/user", {
+        name,
+        email,
+        password,
+      });
+
+      Router.push("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function logoutUser() {
+    try {
+      destroyCookie(null, "@barber.token", { path: "/" });
+      Router.push("/login");
+      setUser(null);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, signIn }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, signIn, signUp, logoutUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

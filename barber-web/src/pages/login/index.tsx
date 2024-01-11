@@ -1,5 +1,5 @@
-import { Button, Center, Flex, Input, Text } from "@chakra-ui/react";
-import Image from "next/image";
+import { Button, Center, Flex, Input, Text, useToast } from "@chakra-ui/react";
+import Image from "next/legacy/image";
 import logoImg from "../../../public/logo.svg";
 import Head from "next/head";
 import Link from "next/link";
@@ -18,6 +18,7 @@ type FormData = z.infer<typeof shcema>;
 
 export default function Login() {
   const { signIn } = useContext(AuthContext);
+  const toast = useToast();
   const {
     register,
     handleSubmit,
@@ -31,6 +32,14 @@ export default function Login() {
     await signIn({
       email: data.email,
       password: data.password,
+    });
+
+    toast({
+      title: "Logado com sucesso",
+      status: "success",
+      isClosable: true,
+      variant: "sublte",
+      position: "top-right",
     });
   }
 

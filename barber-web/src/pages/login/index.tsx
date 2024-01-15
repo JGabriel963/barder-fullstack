@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
+import { canSSRGuest } from "@/utils/canSSRGuest";
 
 const shcema = z.object({
   email: z.string().email("Email inválido"),
@@ -117,3 +118,9 @@ export default function Login() {
     </>
   );
 }
+
+export const getServerSideProps = canSSRGuest(async (ctx) => {
+  return {
+    props: {},
+  };
+});

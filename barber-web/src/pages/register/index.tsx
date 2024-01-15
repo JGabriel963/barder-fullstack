@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
+import { canSSRGuest } from "@/utils/canSSRGuest";
 
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -137,3 +138,9 @@ export default function Register() {
     </>
   );
 }
+
+export const getServerSideProps = canSSRGuest(async (ctx) => {
+  return {
+    props: {},
+  };
+});

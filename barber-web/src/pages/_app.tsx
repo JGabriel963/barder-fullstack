@@ -32,12 +32,12 @@ const theme = extendTheme({ colors });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
-      <main className={poppins.className}>
-        <AuthProvider>
+    <main className={poppins.className}>
+      <AuthProvider>
+        <ChakraProvider theme={theme}>
           <Component {...pageProps} />
-        </AuthProvider>
-      </main>
-    </ChakraProvider>
+        </ChakraProvider>
+      </AuthProvider>
+    </main>
   );
 }

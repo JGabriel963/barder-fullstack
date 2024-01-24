@@ -6,7 +6,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { canSSRGuest } from "@/utils/canSSRGuest";
 
@@ -19,6 +19,7 @@ type FormData = z.infer<typeof shcema>;
 
 export default function Login() {
   const { signIn } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
   const {
     register,
@@ -30,18 +31,32 @@ export default function Login() {
   });
 
   async function handleLogin(data: FormData) {
+    setLoading(true);
     await signIn({
       email: data.email,
       password: data.password,
-    });
-
-    toast({
-      title: "Logado com sucesso",
-      status: "success",
-      isClosable: true,
-      variant: "subtle",
-      position: "top-right",
-    });
+    })
+      .then(() => {
+        setLoading(false);
+        toast({
+          title: "Logado com sucesso",
+          status: "success",
+          isClosable: true,
+          variant: "subtle",
+          position: "top-right",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+        toast({
+          title: "Error ao tentar logar",
+          status: "error",
+          isClosable: true,
+          variant: "subtle",
+          position: "top-right",
+        });
+      });
   }
 
   return (
@@ -101,6 +116,7 @@ export default function Login() {
               size="lg"
               _hover={{ bg: "#ffb13e" }}
               type="submit"
+              isLoading={loading}
             >
               Acessar
             </Button>

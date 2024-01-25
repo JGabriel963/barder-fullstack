@@ -5,9 +5,7 @@ export default class MyDocument extends Document {
   render(): JSX.Element {
     return (
       <Html>
-        <Head>
-          <title>Barber PRO</title>
-        </Head>
+        <Head></Head>
         <body>
           <Main />
           <NextScript />

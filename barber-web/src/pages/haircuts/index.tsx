@@ -1,4 +1,6 @@
 import { Sidebar } from "@/components/sidebar";
+import { setupAPIClient } from "@/services/api";
+import { canSSRAuth } from "@/utils/canSSRAuth";
 import {
   Button,
   Flex,
@@ -10,10 +12,25 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import { IoMdPricetag } from "react-icons/io";
 
-export default function Haricuts() {
+interface HaircutItem {
+  id: string;
+  name: string;
+  price: string | number;
+  status: boolean;
+  user_id: string;
+}
+
+interface HaircutsProps {
+  haircuts: HaircutItem[];
+}
+
+export default function Haricuts({ haircuts }: HaircutsProps) {
   const [isMobile] = useMediaQuery("(max-width: 500px)");
+
+  const [haircutsList, setHaircutsList] = useState(haircuts || []);
 
   return (
     <>
@@ -56,35 +73,71 @@ export default function Haricuts() {
             </Stack>
           </Flex>
 
-          <Link href="/" style={{ width: "100%" }}>
-            <Flex
-              cursor="pointer"
-              w="100%"
-              p={4}
-              bg="barber.400"
-              direction={isMobile ? "column" : "row"}
-              align={isMobile ? "flex-start" : "center"}
-              rounded="4"
-              mb={4}
-              justifyContent="space-between"
+          {haircutsList.map((haircut) => (
+            <Link
+              href={`/haircuts/${haircut.id}`}
+              style={{ width: "100%" }}
+              key={haircut.id}
             >
               <Flex
-                mb={isMobile ? 2 : 0}
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
+                cursor="pointer"
+                w="100%"
+                p={4}
+                bg="barber.400"
+                direction={isMobile ? "column" : "row"}
+                align={isMobile ? "flex-start" : "center"}
+                rounded="4"
+                mb={4}
+                justifyContent="space-between"
               >
-                <IoMdPricetag size={28} color="#fba931" />
-                <Text fontWeight="bold" ml={4} noOfLines={2}>
-                  Corte Completo
-                </Text>
-              </Flex>
+                <Flex
+                  mb={isMobile ? 2 : 0}
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <IoMdPricetag size={28} color="#fba931" />
+                  <Text fontWeight="bold" ml={4} noOfLines={2}>
+                    {haircut.name}
+                  </Text>
+                </Flex>
 
-              <Text fontWeight="bold">Preço: R$ 59.90</Text>
-            </Flex>
-          </Link>
+                <Text fontWeight="bold">Preço: R$ {haircut.price}</Text>
+              </Flex>
+            </Link>
+          ))}
         </Flex>
       </Sidebar>
     </>
   );
 }
+
+export const getServerSideProps = canSSRAuth(async (ctx) => {
+  try {
+    const apiClient = setupAPIClient(ctx);
+
+    const response = await apiClient.get("/haircuts", {
+      params: {
+        status: true,
+      },
+    });
+
+    if (response.data === null) {
+      return {
+        redirect: { destination: "/dashboard", permanent: false },
+      };
+    }
+
+    return {
+      props: {
+        haircuts: response.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      redirect: { destination: "/dashboard", permanent: false },
+    };
+  }
+});

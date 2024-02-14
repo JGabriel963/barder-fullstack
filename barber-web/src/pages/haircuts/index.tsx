@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { IoMdPricetag } from "react-icons/io";
 
 interface HaircutItem {
@@ -31,6 +31,35 @@ export default function Haricuts({ haircuts }: HaircutsProps) {
   const [isMobile] = useMediaQuery("(max-width: 500px)");
 
   const [haircutsList, setHaircutsList] = useState(haircuts || []);
+
+  const [disabledHaircut, setDisableHaircut] = useState<"enabled" | "disabled">(
+    "enabled"
+  );
+
+  async function handleDisabled(e: ChangeEvent<HTMLInputElement>) {
+    const apiClient = setupAPIClient();
+
+    if (e.target.value === "enabled") {
+      setDisableHaircut("disabled");
+
+      const reponse = await apiClient.get("/haircuts", {
+        params: {
+          status: false,
+        },
+      });
+
+      setHaircutsList(reponse.data);
+    } else {
+      setDisableHaircut("enabled");
+      const reponse = await apiClient.get("/haircuts", {
+        params: {
+          status: true,
+        },
+      });
+
+      setHaircutsList(reponse.data);
+    }
+  }
 
   return (
     <>
@@ -69,7 +98,13 @@ export default function Haricuts({ haircuts }: HaircutsProps) {
 
             <Stack ml="auto" align="center" direction="row">
               <Text fontWeight="bold">ATIVOS</Text>
-              <Switch colorScheme="green" size="lg" />
+              <Switch
+                colorScheme="green"
+                size="lg"
+                value={disabledHaircut}
+                onChange={(e) => handleDisabled(e)}
+                isChecked={disabledHaircut === "disabled" ? false : true}
+              />
             </Stack>
           </Flex>
 

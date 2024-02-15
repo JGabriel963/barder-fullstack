@@ -171,7 +171,7 @@ export default function NewHaircut({ subscription, count }: NewHaircutProps) {
                 bg="button.cta"
                 isLoading={loading}
                 _hover={{ bg: "#ffb13e" }}
-                disabled={!subscription && count >= 3}
+                isDisabled={!subscription && count >= 3}
               >
                 Cadastrar
               </Button>

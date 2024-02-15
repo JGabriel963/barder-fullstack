@@ -102,6 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       Router.push("/dashboard");
     } catch (error) {
       console.log(error);
+      throw new Error("Erro ao tentar logar!");
     }
   }
 

@@ -8,23 +8,27 @@ import {
   Switch,
   Text,
   useMediaQuery,
+  useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { FiChevronLeft } from "react-icons/fi";
 import Link from "next/link";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface HaircutProps {
   id: string;
   name: string;
-  price: string | number;
+  price: string;
   status: boolean;
 }
 
 interface SubscriptionProps {
   id: string;
-  status: string;
+  status?: string;
 }
 
 interface EditHaircutProps {
@@ -32,11 +36,59 @@ interface EditHaircutProps {
   subscription: SubscriptionProps | null;
 }
 
+const schema = z.object({
+  name: z.string().min(1, "Campo obrigatório"),
+  price: z.string().min(1, "Campo obrigatório"),
+  status: z.boolean(),
+});
+
+type FormData = z.infer<typeof schema>;
+
 export default function EditHaircut({
   haircut,
   subscription,
 }: EditHaircutProps) {
   const [isMobile] = useMediaQuery("(max-width: 500px)");
+  const { register, handleSubmit } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    mode: "onSubmit",
+    defaultValues: {
+      name: haircut.name,
+      price: haircut.price,
+      status: haircut.status ? false : true,
+    },
+  });
+  const toast = useToast();
+
+  async function handleUpdate(data: FormData) {
+    try {
+      const apiClient = setupAPIClient();
+      await apiClient.put("/haircut", {
+        name: data.name,
+        price: data.price,
+        status: !data.status ? true : false,
+        haircut_id: haircut.id,
+      });
+
+      toast({
+        title: "Corte atualizado",
+        status: "success",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error ao atualizar corte",
+        status: "error",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+    }
+  }
+
   return (
     <>
       <Head>
@@ -85,56 +137,64 @@ export default function EditHaircut({
           >
             <Heading fontSize={isMobile ? "22px" : "3xl"}>Editar Corte</Heading>
 
-            <Flex mt={3} w="85%" direction="column">
-              <Input
-                placeholder="Nome do corte"
-                bg="gray.900"
-                mb={3}
-                size="lg"
-                type="text"
-                w="100%"
-              />
-              <Input
-                placeholder="Valor do seu corte ex.: 45.90"
-                bg="gray.900"
-                mb={3}
-                size="lg"
-                type="number"
-                w="100%"
-              />
+            <form
+              onSubmit={handleSubmit(handleUpdate)}
+              style={{ width: "85%" }}
+            >
+              <Flex mt={3} w="100%" direction="column">
+                <Input
+                  placeholder="Nome do corte"
+                  bg="gray.900"
+                  mb={3}
+                  size="lg"
+                  type="text"
+                  w="100%"
+                  {...register("name")}
+                />
+                <Input
+                  placeholder="Valor do seu corte ex.: 45.90"
+                  bg="gray.900"
+                  mb={3}
+                  size="lg"
+                  type="text"
+                  w="100%"
+                  {...register("price")}
+                />
 
-              <Stack mb={6} align="center" direction="row">
-                <Text>Desativar corte</Text>
-                <Switch size="lg" colorScheme="red" />
-              </Stack>
+                <Stack mb={6} align="center" direction="row">
+                  <Text>Desativar corte</Text>
+                  <Switch size="lg" colorScheme="red" {...register("status")} />
+                </Stack>
 
-              <Button
-                mb={6}
-                w="100%"
-                bg="button.cta"
-                color="gray.900"
-                _hover={{ bg: "#ffb13e" }}
-                disabled={subscription?.status !== "active"}
-              >
-                Salvar
-              </Button>
+                <Button
+                  type="submit"
+                  mb={6}
+                  w="100%"
+                  bg="button.cta"
+                  color="gray.900"
+                  _hover={{ bg: "#ffb13e" }}
+                  isDisabled={subscription?.status !== "active"}
+                >
+                  Salvar
+                </Button>
 
-              {subscription?.status !== "active" && (
-                <Flex direction="row" align="center" justify="center">
-                  <Link href="/planos">
-                    <Text
-                      cursor="pointer"
-                      fontWeight="bold"
-                      mr={1}
-                      color="#32fb6a"
-                    >
-                      Seja premium
-                    </Text>
-                  </Link>
-                  <Text>e tenha todos acessos liberados.</Text>
-                </Flex>
-              )}
-            </Flex>
+                {subscription?.status !== "active" && (
+                  <Flex direction="row" align="center" justify="center">
+                    <Link href="/planos">
+                      <Text
+                        cursor="pointer"
+                        fontWeight="bold"
+                        mr={1}
+                        color="#32fb6a"
+                      >
+                        Seja premium
+                      </Text>
+                    </Link>
+                    <Text>e tenha todos acessos liberados.</Text>
+                  </Flex>
+                )}
+              </Flex>
+            </form>
           </Flex>
         </Flex>
       </Sidebar>
@@ -154,10 +214,13 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
       },
     });
 
+    console.log(response.data);
+    console.log(check.data);
+
     return {
       props: {
         haircut: response.data,
-        subscriptions: check.data?.subscriptions,
+        subscription: check.data?.subscriptions,
       },
     };
 

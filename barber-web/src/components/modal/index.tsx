@@ -5,6 +5,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
@@ -39,9 +40,35 @@ export function ModalInfo({
 
           <ModalBody>
             <Flex align="center" mb={3}>
-              <Text>Teste Modal</Text>
+              <FiUser size={28} color="#ffb13e" />
+              <Text ml={3} fontSize="large" fontWeight="bold" color="white">
+                {data?.customer}
+              </Text>
+            </Flex>
+            <Flex align="center" mb={3}>
+              <FiScissors size={28} color="#ffff" />
+              <Text ml={3} fontSize="large" fontWeight="bold" color="white">
+                {data?.haircuts.name}
+              </Text>
+            </Flex>
+            <Flex align="center" mb={3}>
+              <FaMoneyBillAlt size={28} color="#46ef75" />
+              <Text ml={3} fontSize="large" fontWeight="bold" color="white">
+                R$ {data?.haircuts.price}
+              </Text>
             </Flex>
           </ModalBody>
+          <ModalFooter>
+            <Button
+              bg="button.cta"
+              _hover={{ bg: "#ffb13e" }}
+              mr={3}
+              color="white"
+              onClick={() => finishService()}
+            >
+              Finalizar Serviço
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

@@ -10,6 +10,7 @@ import {
   Link as ChakraLink,
   useMediaQuery,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
@@ -28,6 +29,7 @@ interface DashboardProps {
 
 export default function Dashboard({ schedule }: DashboardProps) {
   const [list, setList] = useState(schedule);
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [service, setService] = useState<ScheduleItem>();
   const [isMobile] = useMediaQuery("(max-width: 500px)");
@@ -35,6 +37,38 @@ export default function Dashboard({ schedule }: DashboardProps) {
   function handleOpenModal(item: ScheduleItem) {
     setService(item);
     onOpen();
+  }
+
+  async function handleFinish(id: string) {
+    try {
+      const apiClient = setupAPIClient();
+      await apiClient.delete("/schedule", {
+        params: {
+          schedule_id: id,
+        },
+      });
+
+      toast({
+        title: "Sucesso :)",
+        status: "success",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+
+      const newList = list.filter((schedule) => schedule.id !== id);
+      setList(newList);
+      onClose();
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error :(",
+        status: "error",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+    }
   }
 
   return (
@@ -105,7 +139,7 @@ export default function Dashboard({ schedule }: DashboardProps) {
         onOpen={onOpen}
         onClose={onClose}
         data={service}
-        finishService={async () => {}}
+        finishService={async () => handleFinish(service.id)}
       />
     </>
   );

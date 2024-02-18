@@ -1,21 +1,84 @@
 import { Sidebar } from "@/components/sidebar";
-import { Button, Flex, Heading, Input, Select } from "@chakra-ui/react";
+import { setupAPIClient } from "@/services/api";
+import { canSSRAuth } from "@/utils/canSSRAuth";
+import {
+  Button,
+  Flex,
+  Heading,
+  Input,
+  Select,
+  useToast,
+} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
   customer: z.string().min(1, "Campo obrigatório"),
+  haircutSelected: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export default function New() {
+interface HaircutsProps {
+  id: string;
+  name: string;
+  price: string;
+  status: boolean;
+  user_id: string;
+}
+
+interface NewProps {
+  haircuts: HaircutsProps[];
+}
+
+export default function New({ haircuts }: NewProps) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const toast = useToast();
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onSubmit",
+    defaultValues: {
+      customer: "",
+      haircutSelected: haircuts[0].id,
+    },
   });
+
+  async function handleRegister(data: FormData) {
+    setLoading(true);
+    try {
+      const apiClient = setupAPIClient();
+      await apiClient.post("/schedule", {
+        customer: data.customer,
+        haircut_id: data.haircutSelected,
+      });
+
+      toast({
+        title: "Sucesso :)",
+        status: "success",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error ao tentar registrar",
+        status: "error",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>
@@ -30,7 +93,10 @@ export default function New() {
             </Heading>
           </Flex>
 
-          <form style={{ width: "100%" }}>
+          <form
+            style={{ width: "100%" }}
+            onSubmit={handleSubmit(handleRegister)}
+          >
             <Flex
               maxW="700px"
               pt={8}
@@ -51,18 +117,28 @@ export default function New() {
                 {...register("customer")}
               />
 
-              <Select bg="barber.900" mb={3} size="lg" w="85%">
-                <option key={1} value="Barba completa">
-                  Barba completa
-                </option>
+              <Select
+                bg="barber.900"
+                mb={3}
+                size="lg"
+                w="85%"
+                {...register("haircutSelected")}
+              >
+                {haircuts.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
               </Select>
 
               <Button
+                type="submit"
                 w="85%"
                 size="lg"
                 color="gray.900"
                 bg="button.cta"
                 _hover={{ bg: "#ffb13e" }}
+                isLoading={loading}
               >
                 Cadastrar
               </Button>
@@ -73,3 +149,37 @@ export default function New() {
     </>
   );
 }
+
+export const getServerSideProps = canSSRAuth(async (ctx) => {
+  try {
+    const apiClient = setupAPIClient(ctx);
+    const reponse = await apiClient.get("/haircuts", {
+      params: {
+        status: true,
+      },
+    });
+
+    if (reponse.data === null) {
+      return {
+        redirect: {
+          destination: "/dashboard",
+          permanent: false,
+        },
+      };
+    }
+
+    return {
+      props: {
+        haircuts: reponse.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+});

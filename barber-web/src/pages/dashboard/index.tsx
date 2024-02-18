@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/sidebar";
+import { setupAPIClient } from "@/services/api";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import {
   Button,
@@ -10,9 +11,21 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import { IoMdPerson } from "react-icons/io";
 
-export default function Dashboard() {
+interface ScheduleItem {
+  id: string;
+  customer: string;
+  haircuts: { id: string; name: string; price: string };
+}
+
+interface DashboardProps {
+  schedule: ScheduleItem[];
+}
+
+export default function Dashboard({ schedule }: DashboardProps) {
+  const [list, setList] = useState(schedule);
   const [isMobile] = useMediaQuery("(max-width: 500px)");
   return (
     <>
@@ -32,44 +45,47 @@ export default function Dashboard() {
             </Link>
           </Flex>
 
-          <ChakraLink
-            w="100%"
-            m={0}
-            p={0}
-            mt={1}
-            bg="transparent"
-            style={{ textDecoration: "none" }}
-          >
-            <Flex
+          {list.map((schedule) => (
+            <ChakraLink
               w="100%"
-              direction={isMobile ? "column" : "row"}
-              p={4}
-              rounded={4}
-              mb={4}
-              bg="barber.400"
-              justify="space-between"
-              align={isMobile ? "flex-start" : "center"}
+              m={0}
+              p={0}
+              mt={1}
+              bg="transparent"
+              style={{ textDecoration: "none" }}
+              key={schedule.id}
             >
               <Flex
-                direction="row"
-                mb={isMobile ? 2 : 0}
-                align="center"
-                justify="center"
+                w="100%"
+                direction={isMobile ? "column" : "row"}
+                p={4}
+                rounded={4}
+                mb={4}
+                bg="barber.400"
+                justify="space-between"
+                align={isMobile ? "flex-start" : "center"}
               >
-                <IoMdPerson size={28} color="#f1f1f1" />
-                <Text fontWeight="bold" ml={4} noOfLines={1}>
-                  John Doe
+                <Flex
+                  direction="row"
+                  mb={isMobile ? 2 : 0}
+                  align="center"
+                  justify="center"
+                >
+                  <IoMdPerson size={28} color="#f1f1f1" />
+                  <Text fontWeight="bold" ml={4} noOfLines={1}>
+                    {schedule.customer}
+                  </Text>
+                </Flex>
+
+                <Text fontWeight="bold" mb={isMobile ? 2 : 0}>
+                  {schedule.haircuts.name}
+                </Text>
+                <Text fontWeight="bold" mb={isMobile ? 2 : 0}>
+                  R$ {schedule.haircuts.price}
                 </Text>
               </Flex>
-
-              <Text fontWeight="bold" mb={isMobile ? 2 : 0}>
-                Corte Completo
-              </Text>
-              <Text fontWeight="bold" mb={isMobile ? 2 : 0}>
-                R$ 59,00
-              </Text>
-            </Flex>
-          </ChakraLink>
+            </ChakraLink>
+          ))}
         </Flex>
       </Sidebar>
     </>
@@ -77,7 +93,21 @@ export default function Dashboard() {
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
-  return {
-    props: {},
-  };
+  try {
+    const apiClient = setupAPIClient(ctx);
+    const response = await apiClient.get("/schedule");
+
+    return {
+      props: {
+        schedule: response.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {
+        schedule: [],
+      },
+    };
+  }
 });

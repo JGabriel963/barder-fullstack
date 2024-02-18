@@ -1,3 +1,4 @@
+import { ModalInfo } from "@/components/modal";
 import { Sidebar } from "@/components/sidebar";
 import { setupAPIClient } from "@/services/api";
 import { canSSRAuth } from "@/utils/canSSRAuth";
@@ -8,16 +9,17 @@ import {
   Text,
   Link as ChakraLink,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import { IoMdPerson } from "react-icons/io";
 
-interface ScheduleItem {
+export interface ScheduleItem {
   id: string;
   customer: string;
-  haircuts: { id: string; name: string; price: string };
+  haircuts: { id: string; name: string; price: string; user_id: string };
 }
 
 interface DashboardProps {
@@ -26,7 +28,15 @@ interface DashboardProps {
 
 export default function Dashboard({ schedule }: DashboardProps) {
   const [list, setList] = useState(schedule);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [service, setService] = useState<ScheduleItem>();
   const [isMobile] = useMediaQuery("(max-width: 500px)");
+
+  function handleOpenModal(item: ScheduleItem) {
+    setService(item);
+    onOpen();
+  }
+
   return (
     <>
       <Head>
@@ -47,6 +57,7 @@ export default function Dashboard({ schedule }: DashboardProps) {
 
           {list.map((schedule) => (
             <ChakraLink
+              onClick={() => handleOpenModal(schedule)}
               w="100%"
               m={0}
               p={0}
@@ -88,6 +99,14 @@ export default function Dashboard({ schedule }: DashboardProps) {
           ))}
         </Flex>
       </Sidebar>
+
+      <ModalInfo
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        data={service}
+        finishService={async () => {}}
+      />
     </>
   );
 }

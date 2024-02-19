@@ -125,7 +125,11 @@ export default function New({ haircuts }: NewProps) {
                 {...register("haircutSelected")}
               >
                 {haircuts.map((item) => (
-                  <option key={item.id} value={item.id}>
+                  <option
+                    style={{ backgroundColor: "#FFF", color: "#000" }}
+                    key={item.id}
+                    value={item.id}
+                  >
                     {item.name}
                   </option>
                 ))}

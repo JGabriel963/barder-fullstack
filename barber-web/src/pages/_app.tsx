@@ -10,6 +10,17 @@ const poppins = Poppins({
   display: "swap",
 });
 
+const styles = {
+  global: {
+    body: {
+      color: "gray.100",
+    },
+    a: {
+      color: "#fff",
+    },
+  },
+};
+
 const colors = {
   barber: {
     900: "#12131b",
@@ -27,7 +38,7 @@ const colors = {
   },
 };
 
-const theme = extendTheme({ colors });
+const theme = extendTheme({ styles, colors });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

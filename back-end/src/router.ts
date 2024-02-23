@@ -41,6 +41,7 @@ router.get("/schedule", isAuthenticated, ListScheduleController.handle);
 router.delete("/schedule", isAuthenticated, FinishScheduleController.handle);
 
 // --- ROUTES PAYMENTS ---
+// 4242 4242 4242 4242.
 router.post("/subscribe", isAuthenticated, SubscribeController.hanlde);
 
 export { router };

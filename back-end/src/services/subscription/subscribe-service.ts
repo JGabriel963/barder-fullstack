@@ -25,6 +25,7 @@ export const SubscribeService = {
     let customerId = findUser.strip_customer_id;
 
     if (!customerId) {
+      console.log("Hi");
       // Caso não tenha, criamos como cliente lá no stripe
       const striperCustomer = await stripe.customers.create({
         email: findUser.email,

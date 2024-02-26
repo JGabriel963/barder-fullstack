@@ -1,7 +1,15 @@
 import { Sidebar } from "@/components/sidebar";
 import { setupAPIClient } from "@/services/api";
+import { getStripeJs } from "@/services/stripe-js";
 import { canSSRAuth } from "@/utils/canSSRAuth";
-import { Button, Flex, Heading, Text, useMediaQuery } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useMediaQuery,
+  useToast,
+} from "@chakra-ui/react";
 import Head from "next/head";
 
 interface PlanosProps {
@@ -10,6 +18,32 @@ interface PlanosProps {
 
 export default function Planos({ premium }: PlanosProps) {
   const [isMobile] = useMediaQuery("(max-width: 500px)");
+  const toast = useToast();
+
+  const handleSubscribe = async () => {
+    if (premium) {
+      return;
+    }
+
+    try {
+      const apiClient = setupAPIClient();
+      const response = await apiClient.post("/subscribe");
+
+      const { sessionId } = response.data;
+
+      const stripe = await getStripeJs();
+      await stripe.redirectToCheckout({ sessionId: sessionId });
+    } catch (err) {
+      console.log(err);
+      toast({
+        title: "Error :(",
+        status: "error",
+        isClosable: true,
+        variant: "subtle",
+        position: "top-right",
+      });
+    }
+  };
   return (
     <>
       <Head>
@@ -103,7 +137,7 @@ export default function Planos({ premium }: PlanosProps) {
                 m={2}
                 color="white"
                 isDisabled={premium}
-                onClick={() => {}}
+                onClick={handleSubscribe}
               >
                 {premium ? "VOCÊ JÁ É PREMIUM" : "VIRAR PREMIUM"}
               </Button>
@@ -131,8 +165,6 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
   try {
     const apiClient = setupAPIClient(ctx);
     const response = await apiClient.get("/me");
-
-    console.log(response.data);
 
     return {
       props: {

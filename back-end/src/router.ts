@@ -14,6 +14,7 @@ import { NewScheduleController } from "./controllers/schedule/new-schedule-contr
 import { ListScheduleController } from "./controllers/schedule/list-schedule-controller";
 import { FinishScheduleController } from "./controllers/schedule/finish-schedule-controller";
 import { SubscribeController } from "./controllers/subscription/subscribe-controller";
+import { WebhooksController } from "./controllers/subscription/webhooks-controller";
 
 const router = Router();
 
@@ -41,7 +42,8 @@ router.get("/schedule", isAuthenticated, ListScheduleController.handle);
 router.delete("/schedule", isAuthenticated, FinishScheduleController.handle);
 
 // --- ROUTES PAYMENTS ---
-// 4242 4242 4242 4242.
+// ./stripe listen --forward-to localhost:3333/webhooks in Dowloads;
 router.post("/subscribe", isAuthenticated, SubscribeController.hanlde);
+router.post("/webhooks", WebhooksController.handle);
 
 export { router };

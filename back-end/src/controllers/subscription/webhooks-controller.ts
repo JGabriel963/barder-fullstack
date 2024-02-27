@@ -7,21 +7,18 @@ export const WebhooksController = {
   async handle(request: Request, response: Response) {
     let event: Stripe.Event = request.body;
 
-    let endpointSecret: "whsec_aee00846dac652fd0ca1abf58c379e862829ea8676ecfa4803ad394090499b05";
+    const signature = request.headers["stripe-signature"];
+    let endpointSecret =
+      "whsec_aee00846dac652fd0ca1abf58c379e862829ea8676ecfa4803ad394090499b05";
 
-    if (endpointSecret) {
-      const signature = request.headers["stripe-signature"];
-
-      try {
-        event = stripe.webhooks.constructEvent(
-          request.body,
-          signature,
-          endpointSecret
-        );
-      } catch (error) {
-        console.log("Webhook signature failed", error.message);
-        return response.sendStatus(400);
-      }
+    try {
+      event = stripe.webhooks.constructEvent(
+        request.body,
+        signature,
+        endpointSecret
+      );
+    } catch (error) {
+      return response.sendStatus(400).send(`Webhook error: ${error.message}`);
     }
 
     switch (event.type) {

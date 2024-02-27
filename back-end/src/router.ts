@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import { CreateUserController } from "./controllers/user/create-user-controller";
 import { AuthUserController } from "./controllers/user/auth-user-controller";
 import { DetailUserController } from "./controllers/user/detail-user-controller";
@@ -15,6 +15,7 @@ import { ListScheduleController } from "./controllers/schedule/list-schedule-con
 import { FinishScheduleController } from "./controllers/schedule/finish-schedule-controller";
 import { SubscribeController } from "./controllers/subscription/subscribe-controller";
 import { WebhooksController } from "./controllers/subscription/webhooks-controller";
+import { CreatePortalController } from "./controllers/subscription/create-portal-controller";
 
 const router = Router();
 
@@ -44,6 +45,11 @@ router.delete("/schedule", isAuthenticated, FinishScheduleController.handle);
 // --- ROUTES PAYMENTS ---
 // ./stripe listen --forward-to localhost:3333/webhooks in Dowloads;
 router.post("/subscribe", isAuthenticated, SubscribeController.hanlde);
-router.post("/webhooks", WebhooksController.handle);
+router.post(
+  "/webhooks",
+  express.raw({ type: "application/json" }),
+  WebhooksController.handle
+);
+router.post("/create-portal", isAuthenticated, CreatePortalController.handle);
 
 export { router };
